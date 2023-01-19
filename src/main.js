@@ -17,7 +17,12 @@ const router = createRouter({
         { name: 'teams', path: '/teams', components: {default: TeamList, footer: TeamsFooter} , children: [
         { name: 'team-members', path: ':teamId', component: TeamMembers, props: true },
             ] },
-        { path: '/users', components: {default: UserList, footer: UserFooter}},
+        { path: '/users', components: {default: UserList, footer: UserFooter},
+        beforeEnter(to, from, next) {
+            console.log('users beforeEnter')
+            console.log(to, from)
+            next()
+        }},
 
         {path: '/:notFound(.*)', component: NotFound}
     ],
@@ -29,19 +34,25 @@ const router = createRouter({
         return {left: 0, top:0}
     }
 })
-const app = createApp(App)
+
 
 router.beforeEach(function(to,from, next) {
     console.log('Global BeforeEach')
     console.log(to, from)
-    // next(false)
-    if (to.name === 'team-members')
-    {
-        next()
-    } else {
-        next({name: 'team-members', params: {teamId: 't2'}})
-    }
+    next()
+    // if (to.name === 'team-members')
+    // {
+    //     next()
+    // } else {
+    //     next({name: 'team-members', params: {teamId: 't2'}})
+    // }
 })
 
-app.use(router)
-app.mount('#app')
+router.afterEach(function(to, from) {
+    console.log('Global AfterEach')
+    console.log(to, from)
+})
+
+const app = createApp(App)
+app.use(router),
+app.mount('#app');

@@ -42,6 +42,12 @@ export default {
       this.teamName = selectedTeam.name
     }
   },
+  beforeRouteUpdate(to, from, next) {
+    console.log('TeamMembers Cmp beforeEachRouteUpdate')
+    console.log(to, from)
+      next()
+  },
+
   created() {
     console.log(this.$route.query)
     this.loadTeamMembers(this.teamId)
